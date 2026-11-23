@@ -1,9 +1,10 @@
-﻿#include <stdio.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
 
-#define _CRT_SECURE_NO_WARNINGS
 #define MAX_NODE_LENGTH 50
 #define MAX_EVENTS 10000
 #define MIN_ARCHIVE_RECORDS 20
@@ -13,7 +14,7 @@
 
 #define ARCHIVE_FILE "archive.txt"
 
-// Структура события
+// Структура для хранения информации о событии
 typedef struct {
     int h;
     int m;
@@ -28,32 +29,36 @@ int getTime(Event event);
 int isDuplicate(Event* events, int count, Event event);
 int shouldArchive(Event* events, int count);
 int filterDuplicates(Event* buffer, int count, Event* unique);
-int writeArchive(Event* events, int count);
-int processBuffer(Event* buffer, int count, Event* unique,
-    int* duplicates, int* archived);
+void writeArchive(Event* events, int count);
+void processBuffer(Event* buffer, int count);
 
-// Главная функция
-int main()
-{
+// Перевод времени в минуты
+int getTime(Event event) {
+    return event.h * 60 + event.m;
+}
+
+int main(void) {
     setlocale(LC_ALL, "Russian");
 
+    // Выделение памяти для массивов событий
+    Event* events = (Event*)malloc(MAX_EVENTS * sizeof(Event));
     Event* buffer = (Event*)malloc(MAX_EVENTS * sizeof(Event));
-    Event* unique = (Event*)malloc(MAX_EVENTS * sizeof(Event));
 
-    if (buffer == NULL || unique == NULL)
-    {
-        printf("Ошибка выделения памяти.\n");
+    // Проверка успешного выделения памяти
+    if (events == NULL || buffer == NULL) {
+        printf("Ошибка выделения памяти!\n");
 
+        free(events);
         free(buffer);
-        free(unique);
 
         return 1;
     }
 
-    printf("Сервер логирования запущен.\n");
+    printf("Программа обработки событий запущена.\n");
 
+    // Освобождение выделенной памяти
+    free(events);
     free(buffer);
-    free(unique);
 
     return 0;
 }
