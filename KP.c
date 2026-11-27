@@ -1,4 +1,5 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+﻿
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,6 +36,17 @@ void processBuffer(Event* buffer, int count);
 // Перевод времени в минуты
 int getTime(Event event) {
     return event.h * 60 + event.m;
+}
+
+// Чтение входных данных
+int readEvent(Event* event) {
+    char input[256];
+
+    if (fgets(input, sizeof(input), stdin) == NULL) {
+        return 0;
+    }
+
+    return 1;
 }
 
 int main(void) {
